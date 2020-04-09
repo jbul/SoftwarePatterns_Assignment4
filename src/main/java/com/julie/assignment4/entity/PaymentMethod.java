@@ -1,12 +1,9 @@
 package com.julie.assignment4.entity;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 
-@MappedSuperclass
-public class PaymentMethod {
+@Entity
+public abstract class PaymentMethod {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,4 +18,17 @@ public class PaymentMethod {
     public void setPaymentID(long paymentID) {
         this.paymentID = paymentID;
     }
+
+    public final void makePayment(){
+        checkAuthorization();
+        pay();
+        validatePayment();
+
+    }
+
+    public abstract boolean checkAuthorization();
+    public abstract boolean pay();
+    public abstract boolean validatePayment();
+
+
 }
