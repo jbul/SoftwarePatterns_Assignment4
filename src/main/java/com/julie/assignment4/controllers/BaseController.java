@@ -15,4 +15,25 @@ public class BaseController {
     public String login(){
         return "login";
     }
+
+
+    @GetMapping("/products")
+    public String products(){
+        return "products";
+    }
+
+    @GetMapping("/cart")
+    public String cart(){
+        return "cart";
+    }
+
+    @GetMapping("/viewProduct")
+    public String viewProduct(){
+        return "ViewProduct";
+    }
+
+    @GetMapping("/profile")
+    public String viewProfile(){
+        return "Profile";
+    }
 }
