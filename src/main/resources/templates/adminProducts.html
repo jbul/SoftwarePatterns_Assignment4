@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Products</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand">Health Shop</a>
+        <form class="form-inline">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        <svg class="bi bi-bag-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+             xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 4h14v10a2 2 0 01-2 2H3a2 2 0 01-2-2V4zm7-2.5A2.5 2.5 0 005.5 4h-1a3.5 3.5 0 117 0h-1A2.5 2.5 0 008 1.5z"/>
+        </svg>
+    </nav>
+
+    <ul class="nav m-5">
+        <li class="nav-item">
+            <span class="mx-5">
+                <span>Price</span>
+                <a class="active" href="#">+</a>
+                <a class="active" href="#">-</a>
+                </span>
+        </li>
+        <li class="nav-item ">
+            <span class="mx-5">
+                <span>Title</span>
+                <a class="active" href="#">+</a>
+                <a class="active" href="#">-</a>
+                </span>
+        </li>
+        <li class="nav-item">
+            <span class="mx-5" >
+                <span>Category</span>
+                <a class="active" href="#">+</a>
+                <a class="active" href="#">-</a>
+                </span>
+        </li>
+        <li class="nav-item" >
+            <span class="mx-5">
+                <span>Manufacturer</span>
+                <a class="active" href="#">+</a>
+                <a class="active" href="#">-</a>
+                </span>
+        </li>
+    </ul>
+
+    <div class="card" style="width: 18rem;">
+        <img src="https://i5.walmartimages.com/asr/15232da7-ee4e-44f5-b161-19108b8eb291_1.cc1421268d79193b6aa57566636ae1c1.jpeg?odnWidth=450&odnHeight=450&odnBg=ffffff"
+             class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Flour</h5>
+            <p>Product ID: 20192839</p>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+                content.</p>
+            <div class="input-quantity">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Quantity</span>
+                </div>
+                <input type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+            <a href="#" class="btn btn-primary">Update</a>
+        </div>
+    </div>
+
+
+
+</div>
+</body>
+</html>

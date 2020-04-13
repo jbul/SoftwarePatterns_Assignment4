@@ -12,6 +12,9 @@ public class Review {
     private String comment;
 
     @ManyToOne
+    private Customer customer;
+
+    @ManyToOne
     private Product product;
 
     public Review(){}
@@ -46,5 +49,13 @@ public class Review {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public User getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }

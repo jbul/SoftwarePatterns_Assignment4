@@ -1,9 +1,7 @@
 package com.julie.assignment4.entity;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
+import java.util.List;
 
 @MappedSuperclass
 public class User {
@@ -15,6 +13,9 @@ public class User {
     private String firstName;
     private String email;
     private String password;
+
+    @OneToMany
+    private List<Review> reviews;
 
     public User(){}
 
@@ -63,5 +64,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 }

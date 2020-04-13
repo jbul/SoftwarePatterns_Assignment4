@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Order {
+public class CustomerOrder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +17,7 @@ public class Order {
     @OneToMany
     private List<OrderLine> orderLineList;
 
-    public Order(){}
+    public CustomerOrder(){}
 
     public long getOrderID() {
         return orderID;

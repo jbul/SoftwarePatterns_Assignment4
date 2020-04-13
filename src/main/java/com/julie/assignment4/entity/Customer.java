@@ -1,26 +1,30 @@
 package com.julie.assignment4.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Customer extends User {
 
     private String shippingAddress;
-
     @OneToMany
     private List<PaymentMethod> paymentMethods;
-
     @OneToMany
-    private List<Order> orders;
-
+    private List<CustomerOrder> customerOrders;
     @OneToOne
     private LoyaltyCard loyaltyCard;
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<Address> addresses;
+
 
     public Customer(){
+        customerOrders = new ArrayList<>();
+        paymentMethods = new ArrayList<>();
+        addresses = new ArrayList<>();
 
     }
 
@@ -40,12 +44,12 @@ public class Customer extends User {
         this.paymentMethods = paymentMethods;
     }
 
-    public List<Order> getOrders() {
-        return orders;
+    public List<CustomerOrder> getCustomerOrders() {
+        return customerOrders;
     }
 
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
+    public void setCustomerOrders(List<CustomerOrder> customerOrders) {
+        this.customerOrders = customerOrders;
     }
 
     public LoyaltyCard getLoyaltyCard() {
@@ -56,9 +60,15 @@ public class Customer extends User {
         this.loyaltyCard = loyaltyCard;
     }
 
+    public List<Address> getAddresses() {
+        return addresses;
+    }
 
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
+    }
 
-    public static class Builder{
+    public static class CustomerBuilder{
 
         private long userID;
         private String lastName;
@@ -67,52 +77,68 @@ public class Customer extends User {
         private String password;
         private String shippingAddress;
         private List<PaymentMethod> paymentMethods;
-        private List<Order> orders;
+        private List<CustomerOrder> customerOrders;
         private LoyaltyCard loyaltyCard;
+        private List<Address.AddressBuilder> addressBuilderList;
+        //private List<Address> addresses = new ArrayList<>();
 
+        public CustomerBuilder() {
+            addressBuilderList = new ArrayList<>();
+        }
 
-        public Builder setUserID(long userID){
+        public CustomerBuilder(Customer customer) {
+            this();
+            userID = customer.getUserID();
+            lastName = customer.getLastName();
+            firstName = customer.getFirstName();
+            email = customer.getEmail();
+            password = customer.getPassword();
+            //addresses = customer.getAddresses();
+            loyaltyCard = customer.getLoyaltyCard();
+        }
+
+        public CustomerBuilder setUserID(long userID){
             this.userID = userID;
             return this;
         }
 
-        public Builder setFirstName(String firstName){
+        public CustomerBuilder setFirstName(String firstName){
             this.firstName = firstName;
             return this;
         }
 
-        public Builder setLastName(String lastName){
+        public CustomerBuilder setLastName(String lastName){
             this.lastName = lastName;
             return this;
         }
 
-        public Builder setEmail(String email){
+        public CustomerBuilder setEmail(String email){
             this.email = email;
             return this;
         }
 
-        public Builder setPassword(String password){
+        public CustomerBuilder setPassword(String password){
             this.password = password;
             return this;
         }
 
 
-        public Builder setShippingAddress(String shippingAddress) {
+        public CustomerBuilder setShippingAddress(String shippingAddress) {
             this.shippingAddress = shippingAddress;
             return this;
         }
 
-        public Builder setPaymentMethods(List<PaymentMethod> paymentMethods) {
+        public CustomerBuilder setPaymentMethods(List<PaymentMethod> paymentMethods) {
             this.paymentMethods = paymentMethods;
             return this;
         }
 
-        public Builder setOrders(List<Order> orders) {
-            this.orders = orders;
+        public CustomerBuilder setCustomerOrders(List<CustomerOrder> customerOrders) {
+            this.customerOrders = customerOrders;
             return this;
         }
 
-        public Builder setLoyaltyCard(LoyaltyCard loyaltyCard) {
+        public CustomerBuilder setLoyaltyCard(LoyaltyCard loyaltyCard) {
             this.loyaltyCard = loyaltyCard;
             return this;
         }
@@ -127,10 +153,21 @@ public class Customer extends User {
             customer.setPassword(this.password);
             customer.setShippingAddress(this.shippingAddress);
             customer.setPaymentMethods(this.paymentMethods);
-            customer.setOrders(this.orders);
+            customer.setCustomerOrders(this.customerOrders);
             customer.setLoyaltyCard(this.loyaltyCard);
+            if(addressBuilderList != null) {
+                for (Address.AddressBuilder a : addressBuilderList) {
+                    customer.getAddresses().add(a.build());
+                }
+            }
 
             return customer;
+        }
+
+        public CustomerBuilder addAddress(Address.AddressBuilder addressBuilder){
+            addressBuilderList.add(addressBuilder);
+            return this;
+
         }
     }
 }

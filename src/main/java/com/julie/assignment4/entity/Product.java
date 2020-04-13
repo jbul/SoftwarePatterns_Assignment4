@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Product {
+public class Product implements Comparable<Product> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,6 +13,7 @@ public class Product {
     private String manufacturer;
     private double price;
     private String productImage; //Associated image
+    private String description;
 
     @OneToOne
     private OrderLine orderLine;
@@ -87,5 +88,24 @@ public class Product {
 
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public int compareTo(Product o) {
+
+        if (this.productID > o.productID) {
+            return 1;
+        } else if (this.productID < o.productID) {
+            return -1;
+        }
+        return 0;
     }
 }

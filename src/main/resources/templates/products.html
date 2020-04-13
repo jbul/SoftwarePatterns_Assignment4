@@ -1,23 +1,24 @@
-<html>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 
-<head>
-    <title>Products</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-            crossorigin="anonymous"></script>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<title>Products</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
 </head>
 <body>
 <div class="container">
     <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand">Navbar</a>
+        <a class="navbar-brand">Health Store</a>
         <form class="form-inline">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
@@ -44,13 +45,13 @@
                 </span>
         </li>
         <li class="nav-item">
-            <span class="mx-5" >
+            <span class="mx-5">
                 <span>Category</span>
                 <a class="active" href="#">+</a>
                 <a class="active" href="#">-</a>
                 </span>
         </li>
-        <li class="nav-item" >
+        <li class="nav-item">
             <span class="mx-5">
                 <span>Manufacturer</span>
                 <a class="active" href="#">+</a>
@@ -59,17 +60,28 @@
         </li>
     </ul>
 
-    <div class="card" style="width: 18rem;">
-        <img src="https://i5.walmartimages.com/asr/15232da7-ee4e-44f5-b161-19108b8eb291_1.cc1421268d79193b6aa57566636ae1c1.jpeg?odnWidth=450&odnHeight=450&odnBg=ffffff"
-             class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+    <!--<div  class="card" style="width: 18rem;">-->
+    <!--<img src="https://i5.walmartimages.com/asr/15232da7-ee4e-44f5-b161-19108b8eb291_1.cc1421268d79193b6aa57566636ae1c1.jpeg?odnWidth=450&odnHeight=450&odnBg=ffffff"-->
+    <!--class="card-img-top" alt="...">-->
+    <!--<div class="card-body">-->
+    <!--<h5 class="card-title">Card title</h5>-->
+    <!--<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's-->
+    <!--content.</p>-->
+    <!--<a href="#" class="btn btn-primary">Go somewhere</a>-->
+    <!--</div>-->
+    <!--</div>-->
+
+    <div class="card-columns">
+        <div th:each="product: ${products}" class="card">
+            <img th:src="${product.productImage}" class="card-img-top" width="200px" >
+            <div class="card-body">
+                <h5 class="card-title" th:text="${product.productTitle}"></h5>
+                <h6 class="card-subtitle mb-2 text-muted" th:text="${product.price}"></h6>
+                <p class="card-text" th:text="${product.description}"></p>
+                <a th:href="@{'/viewProduct?id=' + ${product.productId}}" class="btn btn-primary">Details</a>
+            </div>
         </div>
     </div>
-
 </div>
 </body>
 </html>
