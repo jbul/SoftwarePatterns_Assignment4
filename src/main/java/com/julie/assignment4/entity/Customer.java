@@ -1,21 +1,17 @@
 package com.julie.assignment4.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Customer extends User {
 
-    private String shippingAddress;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.MERGE)
     private List<PaymentMethod> paymentMethods;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.MERGE)
     private List<CustomerOrder> customerOrders;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.MERGE)
     private LoyaltyCard loyaltyCard;
     @OneToMany(fetch = FetchType.EAGER)
     private List<Address> addresses;
@@ -28,13 +24,14 @@ public class Customer extends User {
 
     }
 
-    public String getShippingAddress() {
-        return shippingAddress;
+    public Customer(String lastName, String firstName, String email, String password, List<PaymentMethod> paymentMethods, LoyaltyCard loyaltyCard, List<Address> addresses) {
+        super(lastName, firstName, email, password);
+        this.paymentMethods = new ArrayList<>();
+        this.paymentMethods = paymentMethods;
+        this.loyaltyCard = loyaltyCard;
+        this.addresses = addresses;
     }
 
-    public void setShippingAddress(String shippingAddress) {
-        this.shippingAddress = shippingAddress;
-    }
 
     public List<PaymentMethod> getPaymentMethods() {
         return paymentMethods;
@@ -151,7 +148,6 @@ public class Customer extends User {
             customer.setLastName(this.lastName);
             customer.setEmail(this.email);
             customer.setPassword(this.password);
-            customer.setShippingAddress(this.shippingAddress);
             customer.setPaymentMethods(this.paymentMethods);
             customer.setCustomerOrders(this.customerOrders);
             customer.setLoyaltyCard(this.loyaltyCard);

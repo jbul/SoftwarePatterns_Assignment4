@@ -3,11 +3,15 @@ package com.julie.assignment4.entity;
 import javax.persistence.*;
 
 @Entity
+@Inheritance
 public abstract class PaymentMethod {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long paymentID;
+
+    @ManyToOne(cascade = CascadeType.MERGE)
+    private Customer customer;
 
     public PaymentMethod(){}
 
@@ -17,6 +21,14 @@ public abstract class PaymentMethod {
 
     public void setPaymentID(long paymentID) {
         this.paymentID = paymentID;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public final void makePayment(){

@@ -4,10 +4,25 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
-@Inheritance(strategy= InheritanceType.TABLE_PER_CLASS)
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Paypal extends PaymentMethod {
 
+    private String emailAccount;
+
     public Paypal(){}
+
+    public String getEmailAccount() {
+        return emailAccount;
+    }
+
+    public Paypal(String emailAccount) {
+        this.emailAccount = emailAccount;
+    }
+
+    public void setEmailAccount(String emailAccount) {
+        this.emailAccount = emailAccount;
+    }
 
     @Override
     public boolean checkAuthorization() {
@@ -23,7 +38,7 @@ public class Paypal extends PaymentMethod {
 
     @Override
     public boolean validatePayment() {
-        System.out.println("Payment validated");
+        System.out.println("PaymentStrategy validated");
         return true;
     }
 }

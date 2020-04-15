@@ -33,29 +33,29 @@
         <li class="nav-item">
             <span class="mx-5">
                 <span>Price</span>
-                <a class="active" href="#">+</a>
-                <a class="active" href="#">-</a>
+                <a class="active" href="/products?name=price&order=asc">+</a>
+                <a class="active" href="/products?name=price&order=desc">-</a>
                 </span>
         </li>
         <li class="nav-item ">
             <span class="mx-5">
                 <span>Title</span>
-                <a class="active" href="#">+</a>
-                <a class="active" href="#">-</a>
+                <a class="active" href="/products?name=title&order=asc">+</a>
+                <a class="active" href="/products?name=title&order=desc">-</a>
                 </span>
         </li>
         <li class="nav-item">
             <span class="mx-5">
                 <span>Category</span>
-                <a class="active" href="#">+</a>
-                <a class="active" href="#">-</a>
+                <a class="active" href="/products?name=category&order=asc">+</a>
+                <a class="active" href="/products?name=category&order=desc">-</a>
                 </span>
         </li>
         <li class="nav-item">
             <span class="mx-5">
                 <span>Manufacturer</span>
-                <a class="active" href="#">+</a>
-                <a class="active" href="#">-</a>
+                <a class="active" href="/products?name=manufacturer&order=asc">+</a>
+                <a class="active" href="/products?name=manufacturer&order=desc">-</a>
                 </span>
         </li>
     </ul>
@@ -71,14 +71,19 @@
     <!--</div>-->
     <!--</div>-->
 
-    <div class="card-columns">
-        <div th:each="product: ${products}" class="card">
-            <img th:src="${product.productImage}" class="card-img-top" width="200px" >
-            <div class="card-body">
-                <h5 class="card-title" th:text="${product.productTitle}"></h5>
-                <h6 class="card-subtitle mb-2 text-muted" th:text="${product.price}"></h6>
-                <p class="card-text" th:text="${product.description}"></p>
-                <a th:href="@{'/viewProduct?id=' + ${product.productId}}" class="btn btn-primary">Details</a>
+    <div class="row row-cols-1 row-cols-md-3">
+        <div th:each="product: ${products}" class="col mb-4">
+            <div class="card">
+                <img th:src="${product.productImage}" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${product.productTitle}"></h5>
+                    <h6 class="card-subtitle mb-2 text-muted" th:text="${product.manufacturer}"></h6>
+                    <p class="card-text" th:text="${product.description}"></p>
+                    <h6 class="card-subtitle mb-2 text-muted" th:inline="text">
+                        [[${product.price}]] €
+                    </h6>
+                    <a th:href="@{'/viewProduct?id=' + ${product.productID}}" class="btn btn-primary">Details</a>
+                </div>
             </div>
         </div>
     </div>

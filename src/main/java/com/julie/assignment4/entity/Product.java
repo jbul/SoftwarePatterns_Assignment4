@@ -15,16 +15,26 @@ public class Product implements Comparable<Product> {
     private String productImage; //Associated image
     private String description;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.MERGE)
     private OrderLine orderLine;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.MERGE)
     private List<Category> categories;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.MERGE)
     private List<Review> reviews;
 
+
     public Product(){}
+
+    public Product(String productTitle, String manufacturer, double price, String productImage, String description, List<Category> categories) {
+        this.productTitle = productTitle;
+        this.manufacturer = manufacturer;
+        this.price = price;
+        this.productImage = productImage;
+        this.description = description;
+        this.categories = categories;
+    }
 
     public long getProductID() {
         return productID;

@@ -12,10 +12,15 @@ public class LoyaltyCard {
     private Date cardPurchase;
     private Type cardType;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.MERGE)
     private Customer customer;
 
     public LoyaltyCard(){}
+
+    public LoyaltyCard(Date cardPurchase, Type cardType) {
+        this.cardPurchase = cardPurchase;
+        this.cardType = cardType;
+    }
 
     public long getLoyaltyCardID() {
         return loyaltyCardID;

@@ -26,6 +26,16 @@
 
         });
 
+        $(document).ready(function(e) {
+
+            $("#addLoyaltyCardBtn").click(function(e) {
+                $("#addLoyaltyCard").show();
+            });
+
+        });
+
+
+
     </script>
 </head>
 <div class="container">
@@ -37,7 +47,7 @@
                 <span class="input-group-text" id="input_fistName">First Name</span>
             </div>
             <input type="text" class="form-control" aria-label="Sizing example input"
-                   aria-describedby="inputGroup-sizing-default" th:value="*{customer.firstName}" >
+                   aria-describedby="inputGroup-sizing-default" th:value="*{customer.firstName}">
         </div>
 
         <div class="input-group mb-3">
@@ -45,7 +55,7 @@
                 <span class="input-group-text" id="input_lastName">Last Name</span>
             </div>
             <input type="text" class="form-control" aria-label="Sizing example input"
-                   aria-describedby="inputGroup-sizing-default" th:value="*{customer.lastName}" >
+                   aria-describedby="inputGroup-sizing-default" th:value="*{customer.lastName}">
         </div>
 
         <div class="input-group mb-3">
@@ -53,7 +63,7 @@
                 <span class="input-group-text" id="input_email">Email</span>
             </div>
             <input readonly type="text" class="form-control" aria-label="Sizing example input"
-                   aria-describedby="inputGroup-sizing-default" th:value="*{customer.email}" >
+                   aria-describedby="inputGroup-sizing-default" th:value="*{customer.email}">
         </div>
     </form>
 
@@ -65,7 +75,7 @@
             <input type="text" name="line2" placeholder="Line 2">
             <input type="text" name="city" placeholder="City">
             <input type="text" name="country" placeholder="Country">
-            <input type="submit" class="btn btn-primary" value="Add" />
+            <input type="submit" class="btn btn-primary" value="Add"/>
         </form>
     </div>
     <div>
@@ -79,7 +89,37 @@
 
 
     <h3>Loyalty card</h3>
-    <button class="btn btn-primary">+</button>
+
+
+    <!-- If user has no loyalty card -->
+    <div th:unless="${customer.loyaltyCard != null}">
+        <button id="addLoyaltyCardBtn" class="btn btn-primary">+</button>
+        <div id="addLoyaltyCard" style="display: none">
+            <form action="/updateCustomer/loyaltycard" method="post">
+                <input type="text" name="loyaltyCardNo" placeholder="Loyalty Card Number">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownLoyaltyCard"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Card Type
+                    </button>
+                    <select id="LoyaltyCardType" name="loyaltyCardType">
+                        <option value="gold">Gold</option>
+                        <option value="silver">Silver</option>
+                        <option value="bronze">Bronze</option>
+                    </select>
+
+                </div>
+                <input type="submit" class="btn btn-primary" value="Add"/>
+            </form>
+        </div>
+    </div>
+    <!-- If user has loyalty card -->
+    <div th:if="${customer.loyaltyCard != null}">
+        <p th:text="${customer.loyaltyCard.loyaltyCardID}"></p>
+        <p th:text="${customer.loyaltyCard.cardType}"></p>
+    </div>
+
+
     <br/><br/>
 
     <h3>Payment Methods</h3>
@@ -103,7 +143,7 @@
     </form>
 
     <form action="updateCustomer/discard" method="post">
-        <input type="submit" value="Discard" class="btn btn-light" />
+        <input type="submit" value="Discard" class="btn btn-light"/>
     </form>
 
 </div>

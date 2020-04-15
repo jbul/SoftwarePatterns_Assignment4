@@ -11,13 +11,15 @@ public class Review {
     private int score;
     private String comment;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Customer customer;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Product product;
 
     public Review(){}
+
+
 
     public long getReviewID() {
         return reviewID;

@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Category {
+public class Category implements Comparable<Category> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -12,10 +12,16 @@ public class Category {
     private String categoryTitle;
     private String description;
 
-    @ManyToMany
+
+    @ManyToMany(cascade = CascadeType.MERGE)
     private List<Product> products;
 
     public Category(){}
+
+    public Category(String categoryTitle, String description) {
+        this.categoryTitle = categoryTitle;
+        this.description = description;
+    }
 
     public long getCategoryID() {
         return categoryID;
@@ -47,5 +53,10 @@ public class Category {
 
     public void setProducts(List<Product> products) {
         this.products = products;
+    }
+
+    @Override
+    public int compareTo(Category o) {
+        return this.categoryTitle.compareTo(o.categoryTitle);
     }
 }

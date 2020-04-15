@@ -9,10 +9,17 @@ public class OrderLine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long orderLineID;
     private int quantity;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.MERGE)
     private Product product;
 
+
+
     public OrderLine(){}
+
+    public OrderLine(int quantity, Product product) {
+        this.quantity = quantity;
+        this.product = product;
+    }
 
     public long getOrderLineID() {
         return orderLineID;

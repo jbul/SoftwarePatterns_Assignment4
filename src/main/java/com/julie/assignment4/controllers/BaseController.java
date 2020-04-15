@@ -2,6 +2,8 @@ package com.julie.assignment4.controllers;
 
 import com.julie.assignment4.entity.*;
 import com.julie.assignment4.repository.CustomerRepository;
+import com.julie.assignment4.sort2.SortStrategyFactory;
+import com.julie.assignment4.sort2.Sorter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -64,16 +66,19 @@ public class BaseController {
     }
 
     @GetMapping("/products")
-    public String products(Model model) {
+    public String products(@PathParam("order") String order,
+                           @PathParam("name") String name,
+                           Model model) {
+
         Category c = new Category();
         c.setCategoryTitle("Bakery");
 
         Product p1 = new Product();
         p1.setProductID(1);
         p1.setCategories(Arrays.asList(c));
-        p1.setManufacturer("Manufacturer");
-        p1.setPrice(2.0);
-        p1.setProductTitle("The Souper Flour");
+        p1.setManufacturer("Manufacturer1");
+        p1.setPrice(1.0);
+        p1.setProductTitle("B The Souper Flour");
         p1.setProductImage("https://i5.walmartimages.com/asr/15232da7-ee4e-44f5-b161-19108b8eb291_1.cc1421268d79193b6aa57566636ae1c1.jpeg?odnWidth=450&odnHeight=450&odnBg=ffffff");
         p1.setDescription("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. " +
                 "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', " +
@@ -82,33 +87,42 @@ public class BaseController {
         Product p2 = new Product();
         p1.setProductID(2);
         p2.setCategories(Arrays.asList(c));
-        p2.setManufacturer("Manufacturer");
+        p2.setManufacturer("Manufacturer2");
         p2.setPrice(2.0);
-        p2.setProductTitle("The Souper Flour");
+        p2.setProductTitle("C The Souper Flour");
         p2.setProductImage("https://i5.walmartimages.com/asr/15232da7-ee4e-44f5-b161-19108b8eb291_1.cc1421268d79193b6aa57566636ae1c1.jpeg?odnWidth=450&odnHeight=450&odnBg=ffffff");
         p2.setDescription("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.");
 
         Product p3 = new Product();
         p1.setProductID(3);
         p3.setCategories(Arrays.asList(c));
-        p3.setManufacturer("Manufacturer");
-        p3.setPrice(2.0);
-        p3.setProductTitle("The Souper Flour");
+        p3.setManufacturer("Manufacturer3");
+        p3.setPrice(3.0);
+        p3.setProductTitle("A The Souper Flour");
         p3.setProductImage("https://i5.walmartimages.com/asr/15232da7-ee4e-44f5-b161-19108b8eb291_1.cc1421268d79193b6aa57566636ae1c1.jpeg?odnWidth=450&odnHeight=450&odnBg=ffffff");
         p3.setDescription("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.");
 
         Product p4 = new Product();
         p1.setProductID(4);
         p4.setCategories(Arrays.asList(c));
-        p4.setManufacturer("Manufacturer");
-        p4.setPrice(2.0);
-        p4.setProductTitle("The Souper Flour");
+        p4.setManufacturer("Manufacturer4");
+        p4.setPrice(4.0);
+        p4.setProductTitle("E The Souper Flour");
         p4.setProductImage("https://i5.walmartimages.com/asr/15232da7-ee4e-44f5-b161-19108b8eb291_1.cc1421268d79193b6aa57566636ae1c1.jpeg?odnWidth=450&odnHeight=450&odnBg=ffffff");
         p4.setDescription("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.");
 
         List<Product> products = Arrays.asList(p1, p2, p3, p4);
 
-        model.addAttribute("products", products);
+        if (name == null) {
+            name = "";
+        }
+
+        if (order == null) {
+            order = "asc";
+        }
+
+        Sorter sorter = new Sorter(products, SortStrategyFactory.getSortStrategy(name));
+        model.addAttribute("products", sorter.sort(order.equals("asc")));
 
         return "products";
     }
@@ -237,12 +251,19 @@ public class BaseController {
                         .setCountry((String) allParams.get("country"));
 
                 builder.addAddress(addressBuilder);
-                model.addAttribute("customer", builder.build());
 
                 break;
             case "details":
                 break;
+            case "loyaltycard":
+                LoyaltyCard loyaltyCard = new LoyaltyCard();
+                loyaltyCard.setLoyaltyCardID(Long.valueOf((String) allParams.get("loyaltyCardNo")));
+                loyaltyCard.setCardType(LoyaltyCard.Type.valueOf(((String) allParams.get("loyaltyCardType")).toUpperCase()));
+                builder.setLoyaltyCard(loyaltyCard);
+                break;
         }
+
+        model.addAttribute("customer", builder.build());
 
         return "profile";
     }

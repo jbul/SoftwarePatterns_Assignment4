@@ -1,9 +1,6 @@
 package com.julie.assignment4.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class Address {
@@ -16,7 +13,7 @@ public class Address {
     private String city;
     private String country;
     private boolean isMainAddress;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Customer customer;
 
     public Address(){}

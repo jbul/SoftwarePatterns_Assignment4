@@ -1,9 +1,8 @@
 package com.julie.assignment4.entity;
 
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.persistence.Entity;
 
-@Inheritance(strategy= InheritanceType.TABLE_PER_CLASS)
+@Entity
 public class CreditCard extends PaymentMethod {
 
 
@@ -23,7 +22,7 @@ public class CreditCard extends PaymentMethod {
 
     @Override
     public boolean validatePayment() {
-        System.out.println("Payment validated");
+        System.out.println("PaymentStrategy validated");
         return true;
     }
 
