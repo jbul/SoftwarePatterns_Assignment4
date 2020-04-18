@@ -64,6 +64,7 @@ public class InitController {
                 "https://images.hollandandbarrettimages.co.uk/productimages/HB/370/032946_A.jpg",
                 "These sea salted hummus chips are an healthy alternative to standard snacks, ideal for those who wish to avoid Gluten and Lactose but still wish to share with friends and family.",
                 Arrays.asList(categoryFood, categoryVegan));
+        hummusCrisps.setQuantity(50);
 
         productRepository.saveAll(Arrays.asList(tea, hummusCrisps));
 

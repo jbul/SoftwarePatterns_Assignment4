@@ -45,10 +45,12 @@
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
-        <svg class="bi bi-bag-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
-             xmlns="http://www.w3.org/2000/svg">
-            <path d="M1 4h14v10a2 2 0 01-2 2H3a2 2 0 01-2-2V4zm7-2.5A2.5 2.5 0 005.5 4h-1a3.5 3.5 0 117 0h-1A2.5 2.5 0 008 1.5z"/>
-        </svg>
+        <a href="cart">
+            <svg class="bi bi-bag-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 4h14v10a2 2 0 01-2 2H3a2 2 0 01-2-2V4zm7-2.5A2.5 2.5 0 005.5 4h-1a3.5 3.5 0 117 0h-1A2.5 2.5 0 008 1.5z"/>
+            </svg>
+        </a>
     </nav>
 
     <div id="messages"></div>
@@ -96,7 +98,10 @@
                         [[${product.price}]] €
                     </h6>
                     <a th:href="@{'/viewProduct?id=' + ${product.productID}}" class="btn btn-primary">Details</a>
-                    <a th:href="@{'/watch?id=' + ${product.productID}}" class="btn btn-primary">Watch</a>
+
+                    <th:block th:if="${product.quantity == 0}">
+                        <a th:href="@{'/watch?id=' + ${product.productID}}" class="btn btn-primary">Watch</a>
+                    </th:block>
                 </div>
             </div>
         </div>

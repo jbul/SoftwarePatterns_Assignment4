@@ -3,6 +3,7 @@ package com.julie.assignment4.controllers;
 import com.julie.assignment4.entity.*;
 import com.julie.assignment4.observer.ProductObserverManager;
 import com.julie.assignment4.repository.AdminRepository;
+import com.julie.assignment4.repository.CustomerOrderRepository;
 import com.julie.assignment4.repository.CustomerRepository;
 import com.julie.assignment4.repository.ProductRepository;
 import com.julie.assignment4.sort2.SortStrategyFactory;
@@ -32,6 +33,9 @@ public class BaseController {
     ProductRepository productRepository;
     @Autowired
     AdminRepository adminRepository;
+
+    @Autowired
+    CustomerOrderRepository customerOrderRepository;
 
     @GetMapping("/createAccount")
     public String main() {
@@ -279,15 +283,24 @@ public class BaseController {
     public String pay(@RequestParam String paymentMethod, HttpServletRequest request) {
 
         if (request.getSession().getAttribute("loggedCustomer") != null) {
-            Customer c = (Customer) request.getSession().getAttribute("loggedCustomer");
+            Customer c = customerRepository.findById(((Customer) request.getSession().getAttribute("loggedCustomer")).getUserID()).get();
             Map<Product, Integer> cart = (Map<Product, Integer>) request.getSession().getAttribute("cart");
             double amount = getCartTotal(cart);
 
+            CustomerOrder o = createorder(cart);
+
+            o.setCustomer(c);
+            o.setTotalPrice(getCartTotal(cart));
+
             for (PaymentMethod paymentMethod1 : c.getPaymentMethods()) {
                 if (paymentMethod1.getPaymentID() == Long.valueOf(paymentMethod)) {
+
                     paymentMethod1.makePayment(amount);
                 }
             }
+
+            customerOrderRepository.save(o);
+
 
             request.getSession().removeAttribute("cart");
 
@@ -297,6 +310,23 @@ public class BaseController {
         }
     }
 
+    private CustomerOrder createorder(Map<Product, Integer> cart) {
+        CustomerOrder order = new CustomerOrder();
+
+        for (Map.Entry<Product, Integer> cartel : cart.entrySet()) {
+
+            Product p = productRepository.findById(cartel.getKey().getProductID()).get();
+
+
+            order.getOrderLineList().add(new OrderLine(cartel.getValue(), p));
+            cartel.getKey().setQuantity(cartel.getKey().getQuantity() - cartel.getValue());
+
+            p.setQuantity(p.getQuantity() - cartel.getValue());
+            productRepository.save(p);
+        }
+
+        return order;
+    }
 
     @GetMapping("watch")
     public String watch(@RequestParam("id") String productID, HttpServletRequest request) {
@@ -321,5 +351,24 @@ public class BaseController {
         }
 
         return new ResponseEntity(new ArrayList<>(), HttpStatus.OK);
+    }
+
+    @Transactional
+    @GetMapping("orderHistory")
+    public String orderHistory(Model m, HttpServletRequest request) {
+
+        if (request.getSession().getAttribute("loggedCustomer") == null) {
+            return "login";
+        }
+
+        Iterator<CustomerOrder> it = customerOrderRepository.findAll().iterator();
+        List<CustomerOrder> co = new ArrayList<>();
+        while (it.hasNext()) {
+            Hibernate.initialize(co);
+            co.add(it.next());
+
+        }
+        m.addAttribute("orders", co);
+        return "orderHistory";
     }
 }

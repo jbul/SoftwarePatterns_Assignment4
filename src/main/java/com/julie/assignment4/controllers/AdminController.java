@@ -70,17 +70,23 @@ public class AdminController {
 
     @PostMapping("updateProduct")
     public String updateProduct(Product product) {
-
+        boolean wasRestocked = false;
         Product p = productRepository.findById(product.getProductID()).get();
 
         p.setDescription(product.getDescription());
         p.setProductTitle(product.getProductTitle());
         p.setPrice(product.getPrice());
 
+        if (p.getQuantity() == 0 && product.getQuantity() > 0) {
+            wasRestocked = true;
+        }
+
+        p.setQuantity(product.getQuantity());
         productRepository.save(p);
 
-        ProductObserverManager.getInstance().productChanged(product);
-
+        if (wasRestocked) {
+            ProductObserverManager.getInstance().productChanged(product);
+        }
         return "redirect:adminProducts";
     }
 

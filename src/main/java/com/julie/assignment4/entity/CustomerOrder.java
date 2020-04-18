@@ -1,6 +1,7 @@
 package com.julie.assignment4.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,7 +18,9 @@ public class CustomerOrder {
     @OneToMany(cascade = CascadeType.ALL)
     private List<OrderLine> orderLineList;
 
-    public CustomerOrder(){}
+    public CustomerOrder(){
+        orderLineList = new ArrayList<>();
+    }
 
 
 

@@ -144,8 +144,8 @@ public class Product implements Comparable<Product> {
     public void notifyObservers() {
         for (Observer observer : observers) {
             observer.update("Product: "
-                    + productTitle + ", please see new version of it: "
-                    + "<a href=\"http://localhost:8080/viewProduct?id=" + productID + "\">" + productTitle + "</a>");
+                    + productTitle + ", is back in stock. "
+                    + "<a href=\"http://localhost:8080/viewProduct?id=" + productID + "\">Order it !</a>");
         }
     }
 
