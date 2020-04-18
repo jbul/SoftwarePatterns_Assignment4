@@ -21,7 +21,9 @@ public class Sorter {
     }
 
     public List<Product> sort(boolean ascending) {
-        doSort(ascending);
+        if (a.length > 0) {
+            doSort(ascending);
+        }
         return Arrays.asList(a);
     }
 

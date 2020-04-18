@@ -50,9 +50,28 @@
             <td th:text="${total}" ></td>
         </tr>
         <tr>
-            <td colspan="8" style="text-align: right;">
-                <button class="btn btn-primary" type="submit">Pay</button>
-            </td>
+
+
+            <th:block th:if="${customer != null}">
+                <td colspan="8" style="text-align: right;">
+                    <form method="post" action="/pay">
+                        <select name="paymentMethod">
+
+                            <option th:each="method: ${customer.paymentMethods}"
+                                    th:value="${method.paymentID}"
+                                    th:text="${method}" ></option>
+
+                        </select>
+                        <button class="btn btn-primary" type="submit">Pay</button>
+                    </form>
+                </td>
+            </th:block>
+
+            <th:block th:if="${customer == null}">
+                <td colspan="8" style="text-align: right;">
+                    <a href="login">You need to login purchase</a>
+                </td>
+            </th:block>
         </tr>
         </tbody>
     </table>

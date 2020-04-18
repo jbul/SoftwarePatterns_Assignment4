@@ -14,7 +14,7 @@ public class User {
     private String email;
     private String password;
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Review> reviews;
 
     public User(){}

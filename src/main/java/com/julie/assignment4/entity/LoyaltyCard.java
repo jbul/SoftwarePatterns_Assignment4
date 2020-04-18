@@ -12,7 +12,7 @@ public class LoyaltyCard {
     private Date cardPurchase;
     private Type cardType;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne(cascade = CascadeType.ALL)
     private Customer customer;
 
     public LoyaltyCard(){}

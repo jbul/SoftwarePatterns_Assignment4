@@ -49,6 +49,20 @@
 </head>
 <body>
 <div class="container">
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand">Health Store</a>
+        <form class="form-inline">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        <a href="cart">
+            <svg class="bi bi-bag-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 4h14v10a2 2 0 01-2 2H3a2 2 0 01-2-2V4zm7-2.5A2.5 2.5 0 005.5 4h-1a3.5 3.5 0 117 0h-1A2.5 2.5 0 008 1.5z"/>
+            </svg>
+        </a>
+    </nav>
+
     <h1 th:text="${product.productTitle}"></h1>
     <img th:src="${product.productImage}" class="card-img-top" alt="..." style="width:100px">
     <h3>Desciption</h3>
@@ -57,9 +71,10 @@
     <br/>
     <nav class="nav">
 
-        <form action="">
+        <form action="addToCart" method="post">
             <label for="quantity">Quantity</label>
             <input id="quantity" type="number" name="quantity" min="0" value="1">
+            <input type="hidden" name="productID" th:value="${product.productID}" />
             <input type="submit" value="Add">
         </form>
         <div id="price">

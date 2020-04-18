@@ -13,7 +13,7 @@ public class Category implements Comparable<Category> {
     private String description;
 
 
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Product> products;
 
     public Category(){}

@@ -5,8 +5,23 @@ import javax.persistence.Entity;
 @Entity
 public class CreditCard extends PaymentMethod {
 
+    private String cardNumber;
 
-    public CreditCard(){}
+    public CreditCard() {
+
+    }
+
+    public CreditCard(String number){
+        cardNumber = number;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
 
     @Override
     public boolean checkAuthorization() {

@@ -85,6 +85,9 @@ public class InitController {
         PaymentMethod paypalPayment = new Paypal("juliebulanda.jb@gmail.com");
         paymentMethodRepository.save(paypalPayment);
 
+        PaymentMethod card = new CreditCard("123455667");
+        paymentMethodRepository.save(card);
+
         // Create Loyaltycard for user
         LoyaltyCard loyaltyCard = new LoyaltyCard(new Date(), LoyaltyCard.Type.SILVER);
         loyaltyCardRepository.save(loyaltyCard);
@@ -95,7 +98,7 @@ public class InitController {
                 .setFirstName("Julie")
                 .setLastName("Bulanda")
                 .setPassword("123456")
-                .setPaymentMethods(Arrays.asList(paypalPayment))
+                .setPaymentMethods(Arrays.asList(paypalPayment, card))
                 .setLoyaltyCard(loyaltyCard)
                 .build();
 
@@ -112,7 +115,6 @@ public class InitController {
                 .build();
 
         addressRepository.save(primaryAddress);
-
 
         //Create 1 admin
         User admin = new Admin("Bloggs", "Joe", "jbloggs@gmail.com", "123456");

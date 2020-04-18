@@ -10,7 +10,7 @@ public abstract class PaymentMethod {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long paymentID;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.ALL)
     private Customer customer;
 
     public PaymentMethod(){}
@@ -31,16 +31,18 @@ public abstract class PaymentMethod {
         this.customer = customer;
     }
 
-    public final void makePayment(){
+    public final void makePayment(Double amount){
+        System.out.println("Paying: " + amount);
         checkAuthorization();
         pay();
         validatePayment();
-
     }
 
-    public abstract boolean checkAuthorization();
-    public abstract boolean pay();
-    public abstract boolean validatePayment();
+    protected abstract boolean checkAuthorization();
+    protected abstract boolean pay();
+    protected abstract boolean validatePayment();
 
-
+    public String toString() {
+        return getClass().getSimpleName();
+    }
 }

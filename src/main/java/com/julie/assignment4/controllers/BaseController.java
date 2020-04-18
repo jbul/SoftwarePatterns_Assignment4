@@ -1,10 +1,16 @@
 package com.julie.assignment4.controllers;
 
 import com.julie.assignment4.entity.*;
+import com.julie.assignment4.observer.ProductObserverManager;
+import com.julie.assignment4.repository.AdminRepository;
 import com.julie.assignment4.repository.CustomerRepository;
+import com.julie.assignment4.repository.ProductRepository;
 import com.julie.assignment4.sort2.SortStrategyFactory;
 import com.julie.assignment4.sort2.Sorter;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import javax.websocket.server.PathParam;
 import java.util.*;
 
@@ -21,6 +28,10 @@ public class BaseController {
 
     @Autowired
     CustomerRepository customerRepository;
+    @Autowired
+    ProductRepository productRepository;
+    @Autowired
+    AdminRepository adminRepository;
 
     @GetMapping("/createAccount")
     public String main() {
@@ -51,16 +62,27 @@ public class BaseController {
         return "login";
     }
 
+    @Transactional
     @PostMapping("/login")
     public String userLogin(@RequestParam String email, @RequestParam String password, HttpServletRequest request) {
 
         Customer c = customerRepository.getByEmail(email);
 
+//        Admin a =adminRepository.getByEmail(email);
+
         if (c != null && c.getPassword().equals(password)) {
+
+            Hibernate.initialize(c.getPaymentMethods());
+            Hibernate.initialize(c.getCustomerOrders());
+            Hibernate.initialize(c.getReviews());
+
             request.getSession().setAttribute("loggedCustomer", c);
             return "redirect:profile";
-        } else {
-
+//        } else if (a != null && a.getPassword().equals(password)) {
+//
+//            request.getSession().setAttribute("loggedUser", a);
+//            return "redirect:adminProducts";
+        }else {
             return "login";
         }
     }
@@ -70,55 +92,18 @@ public class BaseController {
                            @PathParam("name") String name,
                            Model model) {
 
-        Category c = new Category();
-        c.setCategoryTitle("Bakery");
-
-        Product p1 = new Product();
-        p1.setProductID(1);
-        p1.setCategories(Arrays.asList(c));
-        p1.setManufacturer("Manufacturer1");
-        p1.setPrice(1.0);
-        p1.setProductTitle("B The Souper Flour");
-        p1.setProductImage("https://i5.walmartimages.com/asr/15232da7-ee4e-44f5-b161-19108b8eb291_1.cc1421268d79193b6aa57566636ae1c1.jpeg?odnWidth=450&odnHeight=450&odnBg=ffffff");
-        p1.setDescription("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. " +
-                "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', " +
-                "making it look like readable English.");
-
-        Product p2 = new Product();
-        p1.setProductID(2);
-        p2.setCategories(Arrays.asList(c));
-        p2.setManufacturer("Manufacturer2");
-        p2.setPrice(2.0);
-        p2.setProductTitle("C The Souper Flour");
-        p2.setProductImage("https://i5.walmartimages.com/asr/15232da7-ee4e-44f5-b161-19108b8eb291_1.cc1421268d79193b6aa57566636ae1c1.jpeg?odnWidth=450&odnHeight=450&odnBg=ffffff");
-        p2.setDescription("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.");
-
-        Product p3 = new Product();
-        p1.setProductID(3);
-        p3.setCategories(Arrays.asList(c));
-        p3.setManufacturer("Manufacturer3");
-        p3.setPrice(3.0);
-        p3.setProductTitle("A The Souper Flour");
-        p3.setProductImage("https://i5.walmartimages.com/asr/15232da7-ee4e-44f5-b161-19108b8eb291_1.cc1421268d79193b6aa57566636ae1c1.jpeg?odnWidth=450&odnHeight=450&odnBg=ffffff");
-        p3.setDescription("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.");
-
-        Product p4 = new Product();
-        p1.setProductID(4);
-        p4.setCategories(Arrays.asList(c));
-        p4.setManufacturer("Manufacturer4");
-        p4.setPrice(4.0);
-        p4.setProductTitle("E The Souper Flour");
-        p4.setProductImage("https://i5.walmartimages.com/asr/15232da7-ee4e-44f5-b161-19108b8eb291_1.cc1421268d79193b6aa57566636ae1c1.jpeg?odnWidth=450&odnHeight=450&odnBg=ffffff");
-        p4.setDescription("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.");
-
-        List<Product> products = Arrays.asList(p1, p2, p3, p4);
-
         if (name == null) {
             name = "";
         }
 
         if (order == null) {
             order = "asc";
+        }
+
+        List<Product> products = new ArrayList<>();
+
+        for (Product p : productRepository.findAll()) {
+            products.add(p);
         }
 
         Sorter sorter = new Sorter(products, SortStrategyFactory.getSortStrategy(name));
@@ -128,64 +113,76 @@ public class BaseController {
     }
 
     @GetMapping("/cart")
-    public String cart(Model model) {
-        Category c = new Category();
-        c.setCategoryTitle("Bakery");
+    public String cart(Model model, HttpServletRequest request) {
 
-        Product p1 = new Product();
-        p1.setProductID(1);
-        p1.setCategories(new ArrayList<>(Arrays.asList(c)));
-        p1.setManufacturer("Manufacturer");
-        p1.setPrice(2.0);
-        p1.setProductTitle("The Souper Flour");
-        p1.setProductImage("https://i5.walmartimages.com/asr/15232da7-ee4e-44f5-b161-19108b8eb291_1.cc1421268d79193b6aa57566636ae1c1.jpeg?odnWidth=450&odnHeight=450&odnBg=ffffff");
-        p1.setDescription("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. " +
-                "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', " +
-                "making it look like readable English.");
+        if (request.getSession().getAttribute("loggedCustomer") != null) {
+            model.addAttribute("customer", (Customer)request.getSession().getAttribute("loggedCustomer"));
+        }
 
-        Product p2 = new Product();
-        p1.setProductID(2);
-        p2.setCategories(new ArrayList<>(Arrays.asList(c)));
-        p2.setManufacturer("Manufacturer");
-        p2.setPrice(2.0);
-        p2.setProductTitle("The Souper Flour");
-        p2.setProductImage("https://i5.walmartimages.com/asr/15232da7-ee4e-44f5-b161-19108b8eb291_1.cc1421268d79193b6aa57566636ae1c1.jpeg?odnWidth=450&odnHeight=450&odnBg=ffffff");
-        p2.setDescription("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.");
+        Map<Product, Integer> cart = (Map<Product, Integer>) request.getSession().getAttribute("cart");
 
-        Product p3 = new Product();
-        p1.setProductID(3);
-        p3.setCategories(new ArrayList<>(Arrays.asList(c)));
-        p3.setManufacturer("Manufacturer");
-        p3.setPrice(2.0);
-        p3.setProductTitle("The Souper Flour");
-        p3.setProductImage("https://i5.walmartimages.com/asr/15232da7-ee4e-44f5-b161-19108b8eb291_1.cc1421268d79193b6aa57566636ae1c1.jpeg?odnWidth=450&odnHeight=450&odnBg=ffffff");
-        p3.setDescription("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.");
-
-        Map<Product, Integer> products = new HashMap<>();//Arrays.asList(p1, p2, p3);
-        products.put(p1, 1);
-        products.put(p2, 3);
-        products.put(p3, 2);
-
-        model.addAttribute("products", products);
-        model.addAttribute("total", getCartTotal(products));
+        model.addAttribute("products", cart);
+        model.addAttribute("total", getCartTotal(cart));
         return "cart";
+    }
+
+    @PostMapping("/addToCart")
+    @Transactional
+    public String addToCart(@RequestParam String quantity, @RequestParam String productID, HttpServletRequest httpServletRequest) {
+
+        Map<Product, Integer> cart = (Map<Product, Integer>) httpServletRequest.getSession().getAttribute("cart");
+
+        if (cart != null) {
+
+            for (Map.Entry<Product, Integer> cartEntry : cart.entrySet()) {
+
+                if (cartEntry.getKey().getProductID() == Integer.parseInt(productID)) {
+                    cart.put(cartEntry.getKey(), cartEntry.getValue() + Integer.parseInt(quantity));
+                } else {
+                    Product p = productRepository.findById(Long.valueOf(productID)).get();
+
+                    Hibernate.initialize(p.getCategories());
+
+                    cart.put(p, Integer.parseInt(quantity));
+                }
+            }
+        } else {
+            cart=new HashMap<>();
+            Product p = productRepository.findById(Long.valueOf(productID)).get();
+
+            Hibernate.initialize(p.getCategories());
+
+            cart.put(p, Integer.parseInt(quantity));
+        }
+
+        httpServletRequest.getSession().setAttribute("cart", cart);
+        return "redirect:viewProduct?id=" + productID;
     }
 
     // FIXME Move out from controller
     private double getCartTotal(Map<Product, Integer> products) {
         double result = 0.0;
 
-        for (Map.Entry<Product, Integer> prod : products.entrySet()) {
-            result += prod.getKey().getPrice() * prod.getValue();
+        if (products != null) {
+            for (Map.Entry<Product, Integer> prod : products.entrySet()) {
+                result += prod.getKey().getPrice() * prod.getValue();
+            }
         }
-
         return result;
     }
 
     @GetMapping("/viewProduct")
-    public String viewProduct(Model model) {
-        Category c = new Category();
-        c.setCategoryTitle("Bakery");
+    @Transactional
+    public String viewProduct(@RequestParam("id") String productId, Model model) {
+
+
+        Product p = productRepository.findById(Long.valueOf(productId)).get();
+
+//        Category c = new Category();
+//        c.setCategoryTitle("Bakery");
+
+        Hibernate.initialize(p.getCategories());
+        Hibernate.initialize(p.getOrderLine());
 
         Customer customer = new Customer();
         customer.setFirstName("Julie");
@@ -195,18 +192,18 @@ public class BaseController {
         r.setComment("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.");
         r.setCustomer(customer);
 
-        Product p1 = new Product();
-        p1.setProductID(1);
-        p1.setCategories(Arrays.asList(c));
-        p1.setManufacturer("Manufacturer");
-        p1.setPrice(2.0);
-        p1.setProductTitle("The Souper Flour");
-        p1.setProductImage("https://i5.walmartimages.com/asr/15232da7-ee4e-44f5-b161-19108b8eb291_1.cc1421268d79193b6aa57566636ae1c1.jpeg?odnWidth=450&odnHeight=450&odnBg=ffffff");
-        p1.setDescription("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. " +
-                "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', " +
-                "making it look like readable English.");
+//        Product p1 = new Product();
+//        p1.setProductID(1);
+//        p1.setCategories(Arrays.asList(c));
+//        p1.setManufacturer("Manufacturer");
+//        p1.setPrice(2.0);
+//        p1.setProductTitle("The Souper Flour");
+//        p1.setProductImage("https://i5.walmartimages.com/asr/15232da7-ee4e-44f5-b161-19108b8eb291_1.cc1421268d79193b6aa57566636ae1c1.jpeg?odnWidth=450&odnHeight=450&odnBg=ffffff");
+//        p1.setDescription("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. " +
+//                "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', " +
+//                "making it look like readable English.");
 
-        model.addAttribute("product", p1);
+        model.addAttribute("product", p);
         model.addAttribute("reviews", Arrays.asList(r));
 
         return "ViewProduct";
@@ -278,8 +275,51 @@ public class BaseController {
         return "purchaseHistory";
     }
 
-    @GetMapping("/adminProducts")
-    public String adminProducts() {
-        return "adminProducts";
+    @PostMapping("pay")
+    public String pay(@RequestParam String paymentMethod, HttpServletRequest request) {
+
+        if (request.getSession().getAttribute("loggedCustomer") != null) {
+            Customer c = (Customer) request.getSession().getAttribute("loggedCustomer");
+            Map<Product, Integer> cart = (Map<Product, Integer>) request.getSession().getAttribute("cart");
+            double amount = getCartTotal(cart);
+
+            for (PaymentMethod paymentMethod1 : c.getPaymentMethods()) {
+                if (paymentMethod1.getPaymentID() == Long.valueOf(paymentMethod)) {
+                    paymentMethod1.makePayment(amount);
+                }
+            }
+
+            request.getSession().removeAttribute("cart");
+
+            return "paymentDone";
+        } else {
+            return "login";
+        }
+    }
+
+
+    @GetMapping("watch")
+    public String watch(@RequestParam("id") String productID, HttpServletRequest request) {
+        if (request.getSession().getAttribute("loggedCustomer") == null) {
+            return "login";
+        }
+
+        Product p = productRepository.findById(Long.valueOf(productID)).get();
+        ProductObserverManager.getInstance().addObserver(p, (Customer) request.getSession().getAttribute("loggedCustomer"));
+
+        return "redirect:products";
+    }
+
+
+    @GetMapping("getMessages")
+    public ResponseEntity<List<UpdateMessage>> getMessages(HttpServletRequest request) {
+
+        if (request.getSession().getAttribute("loggedCustomer") != null) {
+            Customer c = (Customer) request.getSession().getAttribute("loggedCustomer");
+
+            return new ResponseEntity(c.getMessages(), HttpStatus.OK);
+        }
+
+        return new ResponseEntity(new ArrayList<>(), HttpStatus.OK);
     }
 }

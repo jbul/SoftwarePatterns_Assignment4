@@ -1,6 +1,9 @@
 package com.julie.assignment4.entity;
 
+import com.julie.assignment4.observer.Observer;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,17 +18,23 @@ public class Product implements Comparable<Product> {
     private String productImage; //Associated image
     private String description;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne(cascade = CascadeType.ALL)
     private OrderLine orderLine;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Category> categories;
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Review> reviews;
 
+    @Transient
+    List<Observer> observers;
 
-    public Product(){}
+    private int quantity;
+
+    public Product(){
+        observers = new ArrayList<>();
+    }
 
     public Product(String productTitle, String manufacturer, double price, String productImage, String description, List<Category> categories) {
         this.productTitle = productTitle;
@@ -34,6 +43,7 @@ public class Product implements Comparable<Product> {
         this.productImage = productImage;
         this.description = description;
         this.categories = categories;
+        this.observers = new ArrayList<>();
     }
 
     public long getProductID() {
@@ -108,6 +118,14 @@ public class Product implements Comparable<Product> {
         this.description = description;
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     @Override
     public int compareTo(Product o) {
 
@@ -117,5 +135,25 @@ public class Product implements Comparable<Product> {
             return -1;
         }
         return 0;
+    }
+
+    public boolean equals(Object o) {
+        return this.productID == ((Product) o).getProductID();
+    }
+
+    public void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update("Product: "
+                    + productTitle + ", please see new version of it: "
+                    + "<a href=\"http://localhost:8080/viewProduct?id=" + productID + "\">" + productTitle + "</a>");
+        }
+    }
+
+    public void addObserver(Observer observer) {
+        this.observers.add(observer);
+    }
+
+    public void removeObserver(Observer observer) {
+        this.observers.remove(observer);
     }
 }

@@ -11,10 +11,10 @@ public class CustomerOrder {
     private long orderID;
     private double totalPrice;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.ALL)
     private Customer customer;
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<OrderLine> orderLineList;
 
     public CustomerOrder(){}

@@ -7,21 +7,22 @@ import java.util.List;
 @Entity
 public class Customer extends User {
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<PaymentMethod> paymentMethods;
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<CustomerOrder> customerOrders;
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne(cascade = CascadeType.ALL)
     private LoyaltyCard loyaltyCard;
     @OneToMany(fetch = FetchType.EAGER)
     private List<Address> addresses;
-
+    @Transient
+    private List<UpdateMessage> messages;
 
     public Customer(){
         customerOrders = new ArrayList<>();
         paymentMethods = new ArrayList<>();
         addresses = new ArrayList<>();
-
+        messages = new ArrayList<>();
     }
 
     public Customer(String lastName, String firstName, String email, String password, List<PaymentMethod> paymentMethods, LoyaltyCard loyaltyCard, List<Address> addresses) {
@@ -30,6 +31,7 @@ public class Customer extends User {
         this.paymentMethods = paymentMethods;
         this.loyaltyCard = loyaltyCard;
         this.addresses = addresses;
+        messages = new ArrayList<>();
     }
 
 
@@ -63,6 +65,15 @@ public class Customer extends User {
 
     public void setAddresses(List<Address> addresses) {
         this.addresses = addresses;
+    }
+
+
+    public List<UpdateMessage> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<UpdateMessage> messages) {
+        this.messages = messages;
     }
 
     public static class CustomerBuilder{

@@ -13,7 +13,7 @@ public class Address {
     private String city;
     private String country;
     private boolean isMainAddress;
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.ALL)
     private Customer customer;
 
     public Address(){}
