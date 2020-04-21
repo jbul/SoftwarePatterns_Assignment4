@@ -73,14 +73,39 @@ public class MainController {
     @GetMapping("/cart")
     public String cart(Model model, HttpServletRequest request) {
 
-        if (request.getSession().getAttribute("loggedCustomer") != null) {
-            model.addAttribute("customer", (Customer)request.getSession().getAttribute("loggedCustomer"));
-        }
 
         Map<Product, Integer> cart = (Map<Product, Integer>) request.getSession().getAttribute("cart");
 
+        double cartTotal = getCartTotal(cart);
+        double totalDiscount = 0.0;
+        if (request.getSession().getAttribute("loggedCustomer") != null) {
+            Customer customer = (Customer)request.getSession().getAttribute("loggedCustomer");
+            model.addAttribute("customer", customer);
+
+            if (customer.getLoyaltyCard() != null) {
+
+                switch (customer.getLoyaltyCard().getCardType()) {
+                    case BRONZE:
+                        totalDiscount = 0.05;
+                        break;
+                    case SILVER:
+                        totalDiscount = 0.07;
+                        break;
+                    case GOLD:
+                        totalDiscount = 0.15;
+                        break;
+                }
+
+                cartTotal =  cartTotal - cartTotal * totalDiscount;
+            }
+        }
+
+        model.addAttribute("totalDiscount",  (int) (totalDiscount * 100));
         model.addAttribute("products", cart);
-        model.addAttribute("total", getCartTotal(cart));
+        model.addAttribute("total", cartTotal);
+
+
+
         return "cart";
     }
 
