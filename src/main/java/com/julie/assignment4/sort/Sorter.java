@@ -1,7 +1,7 @@
-package com.julie.assignment4.sort2;
+package com.julie.assignment4.sort;
 
 import com.julie.assignment4.entity.Product;
-import com.julie.assignment4.sort2.strategy.SortStrategy;
+import com.julie.assignment4.sort.strategy.SortStrategy;
 
 import java.util.Arrays;
 import java.util.List;

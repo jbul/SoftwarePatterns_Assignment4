@@ -29,7 +29,10 @@
 
             $("#rating .fa").click(function(e) {
                 var $this = $(this);
-                var elIndex = $(".fa").index($this);
+                var elIndex = $("#rating .fa").index($this);
+
+                $("#reviewScore").val(elIndex);
+
                 $this.parent().children().each(function(index) {
                     if (index <= elIndex) {
                         $(this).addClass("checked");
@@ -119,19 +122,23 @@
     </div>
     <br/>
 
-    <div class="form-group">
-        <label for="formCommentReview">Leave a comment</label>
-        <textarea class="form-control" id="formCommentReview" rows="3"></textarea>
-    </div>
-    <button class="btn btn-primary" type="submit">Submit</button>
+    <form action="reviewProduct" method="post">
+        <div class="form-group">
+            <label for="formCommentReview">Leave a comment</label>
+            <textarea class="form-control" id="formCommentReview" name="formCommentReview" rows="3"></textarea>
+        </div>
+        <input id="reviewScore" type="hidden" name="reviewScore" value="0" >
+        <input id="productID" type="hidden" name="productID" th:value="${param.id[0]}">
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
     <br/>
 
     <h3>Reviews</h3>
     <div class="comment" th:each="review: ${reviews}" >
         <h5 th:text="${review.customer.firstName}"></h5>
         <div>
-            <th:block th:each="i: ${#numbers.sequence(0, 5)}">
-                <div th:if="${review.score > i}" class="fa fa-star checked"></div>
+            <th:block th:each="i: ${#numbers.sequence(0, 4)}">
+                <div th:if="${review.score >= i}" class="fa fa-star checked"></div>
                 <div th:if="${review.score < i}" class="fa fa-star"></div>
             </th:block>
             <!--<th:block th:each="i: ${#numbers.sequence(0, 5)}">-->

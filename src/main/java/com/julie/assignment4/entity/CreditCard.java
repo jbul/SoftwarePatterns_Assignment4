@@ -24,14 +24,14 @@ public class CreditCard extends PaymentMethod {
     }
 
     @Override
-    public boolean checkAuthorization() {
+    public boolean checkAuthorization(Double amount) {
         System.out.println("Bank issued authorization...");
         return true;
     }
 
     @Override
-    public boolean pay() {
-        System.out.println("Card issued payment");
+    public boolean pay(Double amount) {
+        System.out.println("Card " +  cardNumber +  " issued payment of " + amount + " euro");
         return true;
     }
 

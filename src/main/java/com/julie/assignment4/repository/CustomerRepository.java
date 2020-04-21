@@ -7,4 +7,5 @@ public interface CustomerRepository extends CrudRepository<Customer, Long> {
 
     public Customer getByEmail(String email);
 
+
 }

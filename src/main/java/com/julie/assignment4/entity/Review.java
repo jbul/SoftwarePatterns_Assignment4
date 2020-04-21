@@ -17,6 +17,7 @@ public class Review {
     @ManyToOne(cascade = CascadeType.ALL)
     private Product product;
 
+
     public Review(){}
 
 
@@ -60,4 +61,6 @@ public class Review {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
+
+
 }

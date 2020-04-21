@@ -33,13 +33,13 @@ public abstract class PaymentMethod {
 
     public final void makePayment(Double amount){
         System.out.println("Paying: " + amount);
-        checkAuthorization();
-        pay();
+        checkAuthorization(amount);
+        pay(amount);
         validatePayment();
     }
 
-    protected abstract boolean checkAuthorization();
-    protected abstract boolean pay();
+    protected abstract boolean checkAuthorization(Double amount);
+    protected abstract boolean pay(Double amount);
     protected abstract boolean validatePayment();
 
     public String toString() {

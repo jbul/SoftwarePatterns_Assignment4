@@ -1,4 +1,4 @@
-package com.julie.assignment4.sort2.strategy;
+package com.julie.assignment4.sort.strategy;
 
 import com.julie.assignment4.entity.Product;
 

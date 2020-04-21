@@ -1,6 +1,6 @@
-package com.julie.assignment4.sort2;
+package com.julie.assignment4.sort;
 
-import com.julie.assignment4.sort2.strategy.*;
+import com.julie.assignment4.sort.strategy.*;
 
 public class SortStrategyFactory {
 

@@ -25,14 +25,14 @@ public class Paypal extends PaymentMethod {
     }
 
     @Override
-    public boolean checkAuthorization() {
+    public boolean checkAuthorization(Double amount) {
         System.out.println("Paypal authorization...");
         return true;
     }
 
     @Override
-    public boolean pay() {
-        System.out.println("Paypal issued payment");
+    public boolean pay(Double amount) {
+        System.out.println("Paypal issued payment of : " + amount + "euro from account " + emailAccount);
         return true;
     }
 
