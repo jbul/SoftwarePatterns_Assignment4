@@ -265,11 +265,17 @@ public class MainController {
             return "login";
         }
 
+        Customer customer = (Customer)request.getSession().getAttribute("loggedCustomer");
+        Customer currentCustomer = customerRepository.findById(Long.valueOf(customer.getUserID())).get();
+
         Iterator<CustomerOrder> it = customerOrderRepository.findAll().iterator();
         List<CustomerOrder> co = new ArrayList<>();
         while (it.hasNext()) {
-            Hibernate.initialize(co);
-            co.add(it.next());
+            CustomerOrder cc = it.next();
+            if (cc.getCustomer() != null &&  cc.getCustomer().getUserID() == currentCustomer.getUserID()) {
+                Hibernate.initialize(co);
+                co.add(cc);
+            }
 
         }
         m.addAttribute("orders", co);

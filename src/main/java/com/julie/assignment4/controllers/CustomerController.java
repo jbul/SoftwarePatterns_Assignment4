@@ -1,8 +1,6 @@
 package com.julie.assignment4.controllers;
 
-import com.julie.assignment4.entity.Address;
-import com.julie.assignment4.entity.Customer;
-import com.julie.assignment4.entity.LoyaltyCard;
+import com.julie.assignment4.entity.*;
 import com.julie.assignment4.repository.CustomerRepository;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,9 +55,9 @@ public class CustomerController {
             Hibernate.initialize(customer.getReviews());
 
             request.getSession().setAttribute("loggedCustomer", customer);
-            return "redirect:profile";
+            return "redirect:products";
 
-        }else {
+        } else {
             return "login";
         }
     }
@@ -102,6 +100,14 @@ public class CustomerController {
             case "loyaltycard":
                 createCustomerLoyaltyCard(allParams, builder);
                 break;
+            case "creditcard":
+                addCreditCard(allParams, builder);
+                break;
+            case "paypal":
+                addPaypal(allParams, builder);
+            case "save":
+                customerRepository.save(builder.build());
+                break;
         }
 
         model.addAttribute("customer", builder.build());
@@ -126,4 +132,18 @@ public class CustomerController {
 
         builder.addAddress(addressBuilder);
     }
+
+    private void addCreditCard(@RequestParam Map<String, Object> allParams, Customer.CustomerBuilder builder) {
+        CreditCard creditCard = new CreditCard();
+        creditCard.setCardNumber((String) allParams.get("cardNo"));
+        builder.addPaymentMethod(creditCard);
+    }
+
+    private void addPaypal(@RequestParam Map<String, Object> allParams, Customer.CustomerBuilder builder) {
+        Paypal paypal = new Paypal();
+        paypal.setEmailAccount((String) allParams.get("paypalEmail"));
+        builder.addPaymentMethod(paypal);
+    }
+
+
 }

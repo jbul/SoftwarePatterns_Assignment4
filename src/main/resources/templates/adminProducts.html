@@ -71,6 +71,9 @@
                     <h6 class="card-subtitle mb-2 text-muted" th:inline="text">
                         [[${product.price}]] €
                     </h6>
+                    <p class="card-subtitle mb-2 text-muted" th:inline="text">
+                        Quantity: [[${product.quantity}]]
+                    </p>
                     <a th:href="@{'editProduct?id=' + ${product.productID}}" class="btn btn-primary">Edit</a>
                 </div>
             </div>

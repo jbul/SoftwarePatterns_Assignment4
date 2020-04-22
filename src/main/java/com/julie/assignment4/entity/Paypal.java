@@ -41,4 +41,11 @@ public class Paypal extends PaymentMethod {
         System.out.println("PaymentStrategy validated");
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Paypal{" +
+                "emailAccount='" + emailAccount + '\'' +
+                '}';
+    }
 }

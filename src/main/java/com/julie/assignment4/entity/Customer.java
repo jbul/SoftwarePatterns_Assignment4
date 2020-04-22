@@ -13,7 +13,7 @@ public class Customer extends User {
     private List<CustomerOrder> customerOrders;
     @OneToOne(cascade = CascadeType.ALL)
     private LoyaltyCard loyaltyCard;
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Address> addresses;
     @Transient
     private List<UpdateMessage> messages;
@@ -88,10 +88,10 @@ public class Customer extends User {
         private List<CustomerOrder> customerOrders;
         private LoyaltyCard loyaltyCard;
         private List<Address.AddressBuilder> addressBuilderList;
-        //private List<Address> addresses = new ArrayList<>();
 
         public CustomerBuilder() {
             addressBuilderList = new ArrayList<>();
+            paymentMethods = new ArrayList<>();
         }
 
         public CustomerBuilder(Customer customer) {
@@ -101,8 +101,14 @@ public class Customer extends User {
             firstName = customer.getFirstName();
             email = customer.getEmail();
             password = customer.getPassword();
-            //addresses = customer.getAddresses();
+
+            for (Address address : customer.getAddresses()) {
+
+                addressBuilderList.add(new Address.AddressBuilder(address));
+            }
+
             loyaltyCard = customer.getLoyaltyCard();
+            paymentMethods = customer.getPaymentMethods();
         }
 
         public CustomerBuilder setUserID(long userID){
@@ -138,6 +144,11 @@ public class Customer extends User {
 
         public CustomerBuilder setPaymentMethods(List<PaymentMethod> paymentMethods) {
             this.paymentMethods = paymentMethods;
+            return this;
+        }
+
+        public CustomerBuilder addPaymentMethod(PaymentMethod method) {
+            this.paymentMethods.add(method);
             return this;
         }
 

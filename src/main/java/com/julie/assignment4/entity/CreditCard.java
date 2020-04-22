@@ -41,4 +41,10 @@ public class CreditCard extends PaymentMethod {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "CreditCard{" +
+                "cardNumber='" + cardNumber + '\'' +
+                '}';
+    }
 }

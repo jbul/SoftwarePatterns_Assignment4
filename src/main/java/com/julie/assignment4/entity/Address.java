@@ -1,6 +1,9 @@
 package com.julie.assignment4.entity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Address {
@@ -13,7 +16,7 @@ public class Address {
     private String city;
     private String country;
     private boolean isMainAddress;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Customer customer;
 
     public Address(){}
@@ -73,6 +76,18 @@ public class Address {
         private String country;
         private boolean isMainAddress;
         private Customer customer;
+
+        public AddressBuilder(Address address) {
+            this.line1 = address.getLine1();
+            this.line2 = address.getLine2();
+            this.city = address.getCity();
+            this.country = address.getCountry();
+            this.isMainAddress = address.isMainAddress();
+        }
+
+        public AddressBuilder(){
+
+        }
 
         public AddressBuilder setLine1(String line1) {
             this.line1 = line1;
